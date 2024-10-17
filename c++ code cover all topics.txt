@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+// Using structure 
+struct Student{
+    public:
+    string name;
+    int marks;
+    char grade;
+    // for constructor
+    Student(string studentName,int studentMarks) : name(studentName) , marks(studentMarks){}
+  
+};
+// used for map in stl
+  void findGrades(vector<Student>&array,map<char,int>&mp){
+        for(auto&it : array){
+            if(it.grade=='A'){
+                mp['A']++;
+            }else if(it.grade=='B'){
+                mp['B']++;
+            }else {
+                mp['C']++;
+            }
+        }
+    }
+// for functors
+class setGrade{
+    private:
+    int marks=1000;
+    public:
+    void operator()(Student&student){
+        int gradeMarks=(student.marks*100)/marks;
+        if(gradeMarks>90)  student.grade='A';
+       else if(gradeMarks > 80 && gradeMarks <= 90) student.grade='B';
+        else student.grade='C';
+    }
+};
+class PrintingAll {
+    public:
+    void printAll(vector<Student>& array) {
+        cout << "All Marks, Names, and Grades: " << endl;
+        for (auto& it : array) {
+            cout << it.name << " " << it.marks << " " << it.grade << endl;
+        }
+    }
+};
+
+int main(){
+    // for stl vector
+    vector<Student>studentArray;
+    // for traversal each and every students
+     // for taking inputs  from the users 
+     cout<<"How many students in class : ";
+     int numbers;
+     cin>>numbers;
+     while(numbers--){
+         cout<<"Enter the name for student : ";
+         string studentName;
+         cin>>studentName;
+         int studentMarks;
+         cout<<"Enter the marks for "<<studentName;
+         cin>>studentMarks;
+         studentArray.push_back(Student(studentName,studentMarks));
+     }
+    setGrade assignGrade;
+    for(auto& it : studentArray){
+    assignGrade(it);
+    }
+
+    map<char,int>mp;
+  findGrades(studentArray,mp);
+    // access map for output
+    cout<<"No of Students based on Grades: "<<endl;
+    for(auto&it : mp){
+        cout<<it.first<<" : "<<it.second<<endl;
+    }
+    // smart pointer after the scope ptr delocate
+    {
+   shared_ptr<PrintingAll> ptr = make_shared<PrintingAll>();
+    ptr->printAll(studentArray);
+    }
+}
