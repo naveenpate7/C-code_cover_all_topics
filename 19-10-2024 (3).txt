@@ -1,0 +1,39 @@
+Question : find the 2 elements that  miss place in BST and swap that nodes 
+
+
+
+
+class Solution {
+private:
+    void inorder(TreeNode* root, vector<TreeNode*>& v) {
+        if (root == nullptr) return;
+        inorder(root->left, v);
+        v.push_back(root);
+        inorder(root->right, v);
+    }
+public:
+    void recoverTree(TreeNode* root) {
+        vector<TreeNode*> nodes;
+        inorder(root, nodes);
+
+        // Identify the two nodes that are swapped
+        TreeNode* first = nullptr;
+        TreeNode* second = nullptr;
+
+        for (size_t i = 1; i < nodes.size(); ++i) {
+            if (nodes[i]->val < nodes[i - 1]->val) {
+                if (first == nullptr) {
+                    first = nodes[i - 1];  // The first node that is out of order
+                }
+                second = nodes[i]; // The second node that is out of order
+            }
+        }
+
+        // Swap the values of the two nodes
+        if (first && second) {
+            int temp = first->val;
+            first->val = second->val;
+            second->val = temp;
+        }
+    }
+};

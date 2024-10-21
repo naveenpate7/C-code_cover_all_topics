@@ -1,0 +1,49 @@
+Question is :  find the no of island present in a grid 
+
+Ex: 1 1 1 1 0
+    1 1 0 1 0
+    0 0 0 0 0 
+    1 0 1 0 0    o/p = 3
+
+
+class Solution {
+private:
+    void setVis(int row, int col, vector<vector<char>>& grid) {
+        stack<pair<int, int>> s;
+        s.push({row, col});
+        grid[row][col] = '0';  // Mark the cell as visited by sinking the island
+        
+        while (!s.empty()) {
+            auto it = s.top();
+            s.pop();
+            int qrow = it.first;
+            int qcol = it.second;
+
+            int nrow[] = {0, 0, 1, -1};
+            int ncol[] = {1, -1, 0, 0};
+            for (int i = 0; i < 4; i++) {
+                int nqrow = qrow + nrow[i];
+                int nqcol = qcol + ncol[i];
+                if (nqrow >= 0 && nqrow < grid.size() && nqcol >= 0 && nqcol < grid[0].size() && grid[nqrow][nqcol] == '1') {
+                    s.push({nqrow, nqcol});
+                    grid[nqrow][nqcol] = '0';  // Mark as visited
+                }
+            }
+        }
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0;
+
+        int ans = 0;
+        for (int i = 0; i < grid.size(); i++) {
+            for (int j = 0; j < grid[0].size(); j++) {
+                if (grid[i][j] == '1') {
+                    ans++;
+                    setVis(i, j, grid);  // Sink the island
+                }
+            }
+        }
+        return ans;
+    }
+};
